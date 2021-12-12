@@ -1,0 +1,42 @@
+version: "3.8"
+services: 
+  secret-santa-mongo:
+    image: mongo:latest
+    init: true
+    container_name: secret-santa-mongo
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+    networks:
+      - secretsantanet
+  
+  secret-santa-service:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: secret-santa-service
+    init: true
+    container_name: secret-santa-service
+    restart: always
+    env_file: 
+      - .env
+    depends_on:
+      - secret-santa-mongo
+    ports:
+      - "8899:8080"
+    volumes:
+      - logs:/var/log/secret-santa-service
+    networks:
+      - secretsantanet
+      
+volumes:
+  mongo-data:
+  logs:
+  
+networks:
+  secretsantanet:

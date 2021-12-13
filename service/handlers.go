@@ -387,8 +387,13 @@ func (h *Handlers) RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(&SlackMessage{ResponseTypeInChannel, "Secret Santa pairs have been randomized!"})
+	err = SendSlackMessage(p.ResponseUrl, ResponseTypeInChannel, "Secret Santa pairs have been randomized!")
+	if err != nil {
+		h.logger.Println(err)
+	}
+
+	//w.WriteHeader(http.StatusOK)
+	//_ = json.NewEncoder(w).Encode(&SlackMessage{ResponseTypeInChannel, "Secret Santa pairs have been randomized!"})
 }
 
 func LoggingMiddleware(logger *log.Logger) func(http.Handler) http.Handler {

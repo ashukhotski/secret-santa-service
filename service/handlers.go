@@ -68,7 +68,7 @@ func (h *Handlers) GetHandler(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(&SlackMessage{ResponseTypeEphemeral, err.Error()})
 		return
 	}
-	
+
 	if !p.IsMatched || p.YourMatchId == nil {
 		channelId := ""
 		if req.ChannelId != nil {
@@ -123,7 +123,7 @@ func (h *Handlers) InitializeHandler(w http.ResponseWriter, r *http.Request) {
 		UserId:         r.PostForm.Get("user_id"),
 		UserName:       r.PostForm.Get("user_name"),
 	}
-	
+
 	if req.Text == nil || (req.Text != nil && len(*req.Text) < 5) {
 		err = errors.New("Please provide a valid postal address by typing it after the command")
 		h.logger.Println(err)
@@ -170,7 +170,7 @@ func (h *Handlers) InitializeHandler(w http.ResponseWriter, r *http.Request) {
 	if req.ChannelId != nil {
 		channelId = *req.ChannelId
 	}
-	msg := "<@" + req.UserId + "> just initiated Secret Santa " + strconv.Itoa(y) + " for the Slack channel <#" + channelId +">"
+	msg := "<@" + req.UserId + "> just initiated Secret Santa " + strconv.Itoa(y) + " for the Slack channel <#" + channelId + ">"
 	err = SendSlackMessage(req.ResponseUrl, ResponseTypeInChannel, msg)
 	if err != nil {
 		h.logger.Println(err.Error())
@@ -203,7 +203,7 @@ func (h *Handlers) ParticipateHandler(w http.ResponseWriter, r *http.Request) {
 		UserId:         r.PostForm.Get("user_id"),
 		UserName:       r.PostForm.Get("user_name"),
 	}
-	
+
 	if req.Text == nil || (req.Text != nil && len(*req.Text) < 5) {
 		err = errors.New("Please provide a valid postal address by typing it after the command")
 		h.logger.Println(err)

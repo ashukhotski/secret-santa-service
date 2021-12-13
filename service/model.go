@@ -27,7 +27,7 @@ type Participant struct {
 
 type SlackMessage struct {
 	ResponseType string `json:"response_type"`
-	Text string `json:"text"`
+	Text         string `json:"text"`
 }
 
 type SlackRequest struct {

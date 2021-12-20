@@ -404,14 +404,14 @@ func (h *Handlers) RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 		if participant.YourMatchAddress != nil {
 			yourMatchAddress = *participant.YourMatchAddress
 		}
-		msg := "Your match is <@" + yourMatchId + ">. Prepare your gift and send it to " + yourMatchAddress + ". Thank you and happy New Year!"
+		msg := "<@" + participant.UserId + ">, your match is <@" + yourMatchId + ">. Prepare your gift and send it to " + yourMatchAddress + ". Thank you and happy New Year!"
 		err = SendSlackMessage(participant.ResponseUrl, ResponseTypeEphemeral, msg)
 		if err != nil {
 			h.logger.Println(err)
 		}
 	}
 
-	err = SendSlackMessage(p.ResponseUrl, ResponseTypeInChannel, "Secret Santa pairs have been randomized!")
+	err = SendSlackMessage(p.ResponseUrl, ResponseTypeInChannel, "<!channel> Secret Santa pairs have been randomized!")
 	if err != nil {
 		h.logger.Println(err)
 	}

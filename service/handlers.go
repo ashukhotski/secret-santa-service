@@ -337,7 +337,30 @@ func (h *Handlers) RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(&SlackMessage{ResponseTypeEphemeral, err.Error()})
 		return
 	}
+	
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(poolA), func(i, j int) { poolA[i], poolA[j] = poolA[j], poolA[i] })
+	for key, value := range poolA {
+		if key == len(poolA) - 1 {
+			err := h.repo.UpdateParticipantMatch(r.Context(), &poolA[0], &value, y)
+			if err != nil {
+				h.logger.Println(err)
+				w.WriteHeader(http.StatusOK)
+				_ = json.NewEncoder(w).Encode(&SlackMessage{ResponseTypeEphemeral, err.Error()})
+				return
+			}
+		} else {
+			err := h.repo.UpdateParticipantMatch(r.Context(), &poolA[key+1], &value, y)
+			if err != nil {
+				h.logger.Println(err)
+				w.WriteHeader(http.StatusOK)
+				_ = json.NewEncoder(w).Encode(&SlackMessage{ResponseTypeEphemeral, err.Error()})
+				return
+			}
+		}
+	}
 
+	/*
 	poolB := make([]Participant, len(poolA))
 	copy(poolB, poolA)
 	rand.Seed(time.Now().UnixNano())
@@ -361,7 +384,8 @@ func (h *Handlers) RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 			poolB = append(poolB[:i], poolB[i+1:]...)
 		}
 	}
-
+	*/
+	
 	matchedParticipants, err := h.repo.GetAllParticipants(r.Context(), req.ChannelId, req.EnterpriseId, req.TeamId, y)
 	if err != nil {
 		h.logger.Println(err)

@@ -60,6 +60,14 @@ func (h *Handlers) GetHandler(w http.ResponseWriter, r *http.Request) {
 
 	t := time.Now()
 	y := t.Year()
+	
+	if req.Text != nil && len(*req.Text) >= 4 {
+		layout := "2006"
+		t, err = time.Parse(layout, *req.Text)
+		if err == nil {
+			y = t.Year()
+		}
+	}
 
 	p, err := h.repo.GetParticipantById(r.Context(), req.ChannelId, req.EnterpriseId, req.TeamId, req.UserId, y)
 	if err != nil {

@@ -1,3 +1,4 @@
+#secret-santa-service
 Secret Santa Service is a bot that helps to organise Secret Santa event in your company via Slack and share the joy of winter holidays.
 
 API is written in Go. There are 4 REST commands, all of them are POST:
